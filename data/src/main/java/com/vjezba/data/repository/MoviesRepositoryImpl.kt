@@ -20,6 +20,7 @@ import android.util.Log
 import com.vjezba.data.database.MoviesDatabase
 import com.vjezba.data.database.mapper.DbMapper
 import com.vjezba.data.networking.MovieRepositoryApi
+import com.vjezba.domain.model.Actors
 import com.vjezba.domain.model.MovieDetails
 import com.vjezba.domain.model.Movies
 import com.vjezba.domain.model.Trailer
@@ -61,6 +62,15 @@ class MoviesRepositoryImpl constructor(
         val moviesResult = service.getTrailers(movieId)
 
         val correctMoviesResult = moviesResult.map { dbMapper?.mapApiTrailersToDomainTrailers(it)!! }
+
+        return correctMoviesResult
+    }
+
+    override fun getActors(movieId: Long): Flowable<Actors> {
+
+        val moviesResult = service.getActors(movieId)
+
+        val correctMoviesResult = moviesResult.map { dbMapper?.mapApiActorsToDomainActors(it)!! }
 
         return correctMoviesResult
     }

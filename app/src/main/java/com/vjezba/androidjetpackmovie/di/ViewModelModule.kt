@@ -21,10 +21,14 @@ abstract class ViewModelModule {
     @ViewModelKey(MovieDetailsViewModel::class)
     abstract fun bindMOvieDetailsActivityViewModel(viewModel: MovieDetailsViewModel): ViewModel
 
-
     @Binds
     @IntoMap
     @ViewModelKey(TrailersViewModel::class)
     abstract fun bindTrailersActivityViewModel(viewModel: TrailersViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ActorsViewModel::class)
+    abstract fun bindActorsActivityViewModel(viewModel: ActorsViewModel): ViewModel
 
 }

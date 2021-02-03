@@ -2,6 +2,7 @@ package com.vjezba.androidjetpackmovie.ui.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -60,6 +61,12 @@ class MoviesDetailsActivity : BaseActivity(R.id.no_internet_layout), HasActivity
             tvName.text = movie.originalTitle
             tvHomePage.text = "Web site: " + movie.homepage
 
+            tvHomePage.setOnClickListener {
+                val browserIntent =
+                    Intent(Intent.ACTION_VIEW, Uri.parse( movie.homepage))
+                startActivity(browserIntent)
+            }
+
             Glide.with(this)
                 .load( "https://image.tmdb.org/t/p/w500/" + movie.backdropPath)
                 .placeholder(R.drawable.placeholder)
@@ -86,7 +93,9 @@ class MoviesDetailsActivity : BaseActivity(R.id.no_internet_layout), HasActivity
     }
 
     private fun startActorsActivity() {
-
+        val intent = Intent(this, ActorsActivity::class.java)
+        intent.putExtra("movieId", movieId)
+        startActivity(intent)
     }
 
     private fun startTrailersActivity() {
