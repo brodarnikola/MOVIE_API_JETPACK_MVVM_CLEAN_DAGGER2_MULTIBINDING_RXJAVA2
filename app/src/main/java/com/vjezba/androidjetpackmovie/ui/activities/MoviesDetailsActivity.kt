@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
@@ -18,11 +17,11 @@ import com.vjezba.androidjetpackmovie.viewmodels.MovieDetailsViewModel
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
-import kotlinx.android.synthetic.main.activity_news_details.*
+import kotlinx.android.synthetic.main.activity_movie_details.*
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
-class MoviesDetailsActivity : AppCompatActivity(), HasActivityInjector, HasSupportFragmentInjector {
+class MoviesDetailsActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjector, HasSupportFragmentInjector {
 
     var movieId = 0L
 
@@ -39,12 +38,9 @@ class MoviesDetailsActivity : AppCompatActivity(), HasActivityInjector, HasSuppo
     @Inject lateinit var viewModelFactory: ViewModelFactory
     lateinit var movieDetailsViewModel: MovieDetailsViewModel
 
-    private var dataFetched = false
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_news_details)
+        setContentView(R.layout.activity_movie_details)
 
         movieDetailsViewModel = injectViewModel(viewModelFactory)
 
@@ -58,6 +54,7 @@ class MoviesDetailsActivity : AppCompatActivity(), HasActivityInjector, HasSuppo
 
     override fun onStart() {
         super.onStart()
+        viewLoaded = true
 
         movieDetailsViewModel.newsDetailsList.observe(this, Observer { movie ->
             tvName.text = movie.originalTitle
@@ -78,16 +75,38 @@ class MoviesDetailsActivity : AppCompatActivity(), HasActivityInjector, HasSuppo
         })
 
         movieDetailsViewModel.getMovieDetails(movieId)
+
+        btnTrailers.setOnClickListener {
+            startTrailersActivity()
+        }
+
+        btnActors.setOnClickListener {
+            startActorsActivity()
+        }
     }
 
+    private fun startActorsActivity() {
+
+    }
+
+    private fun startTrailersActivity() {
+        val intent = Intent(this, TrailersActivity::class.java)
+        intent.putExtra("movieId", movieId)
+        startActivity(intent)
+    }
+
+    override fun onNetworkStateUpdated(available: Boolean) {
+        super.onNetworkStateUpdated(available)
+        if( viewLoaded == true )
+            updateConnectivityUi()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_share, menu)
         return true
     }
-    // Helper function for calling a share functionality.
-    // Should be used when user presses a share button/menu item.
+
     @Suppress("DEPRECATION")
     private fun createShareIntent() {
         val shareText = movieDetailsViewModel.newsDetailsList.value.let { data ->

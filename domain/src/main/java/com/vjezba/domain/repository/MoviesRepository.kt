@@ -18,6 +18,7 @@ package com.vjezba.domain.repository
 
 import com.vjezba.domain.model.MovieDetails
 import com.vjezba.domain.model.Movies
+import com.vjezba.domain.model.Trailer
 import io.reactivex.Flowable
 
 
@@ -28,4 +29,5 @@ interface MoviesRepository {
 
     fun getMoviesDetails(movieId: Long) : Flowable<MovieDetails>
 
+    fun getTrailers(movieId: Long) : Flowable<Trailer>
 }

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +17,7 @@ import com.vjezba.androidjetpackmovie.viewmodels.MoviesViewModel
 import com.vjezba.domain.model.MovieResult
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
-import kotlinx.android.synthetic.main.activity_news.*
+import kotlinx.android.synthetic.main.activity_movie.*
 import javax.inject.Inject
 
 
@@ -38,7 +37,7 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_news)
+        setContentView(R.layout.activity_movie)
 
         moviesViewModel = injectViewModel(viewModelFactory)
     }

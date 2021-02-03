@@ -121,6 +121,12 @@ class MoviesViewModel @Inject constructor(
             })
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        if( !compositeDisposable.isDisposed )
+            compositeDisposable.dispose()
+    }
+
     private fun tryToCreateObservableEvery20Seconds() {
         //                Observable.interval(
 //                    10,

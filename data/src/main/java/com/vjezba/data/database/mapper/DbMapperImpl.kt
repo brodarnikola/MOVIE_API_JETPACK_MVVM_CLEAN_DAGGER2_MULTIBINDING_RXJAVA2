@@ -34,9 +34,11 @@ import com.google.gson.annotations.SerializedName
 import com.vjezba.data.database.model.DBMovies
 import com.vjezba.data.networking.model.ApiMovieDetails
 import com.vjezba.data.networking.model.ApiMovies
+import com.vjezba.data.networking.model.ApiTrailers
 import com.vjezba.domain.model.MovieDetails
 import com.vjezba.domain.model.MovieResult
 import com.vjezba.domain.model.Movies
+import com.vjezba.domain.model.Trailer
 import java.util.*
 import kotlin.collections.map
 
@@ -95,6 +97,15 @@ class DbMapperImpl : DbMapper {
                 originalTitle = originalTitle,
                 overview = overview,
                 popularity = popularity
+            )
+        }
+    }
+
+    override fun mapApiTrailersToDomainTrailers(apiTrailers: ApiTrailers): Trailer {
+        return with(apiTrailers) {
+            Trailer(
+                id,
+                results
             )
         }
     }

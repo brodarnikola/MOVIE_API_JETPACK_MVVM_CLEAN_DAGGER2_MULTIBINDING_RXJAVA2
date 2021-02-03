@@ -24,6 +24,8 @@
         </activity>
         <activity
             android:name="com.vjezba.androidjetpackmovie.ui.activities.MoviesDetailsActivity" />
+        <activity
+            android:name="com.vjezba.androidjetpackmovie.ui.activities.TrailersActivity" />
     </application>
 
 </manifest>

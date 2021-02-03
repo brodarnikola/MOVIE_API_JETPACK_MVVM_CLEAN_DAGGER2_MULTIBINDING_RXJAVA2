@@ -14,7 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.vjezba.androidjetpackmovie.R
 import com.vjezba.androidjetpackmovie.ui.utilities.ListDiffer
 import com.vjezba.domain.model.MovieResult
-import kotlinx.android.synthetic.main.news_list.view.*
+import kotlinx.android.synthetic.main.movies_list.view.*
 
 class MoviesAdapter(var MovieResultList: MutableList<MovieResult>,
                     val MovieResultClickListener: (Long) -> Unit )
@@ -30,7 +30,7 @@ class MoviesAdapter(var MovieResultList: MutableList<MovieResult>,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.news_list, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.movies_list, parent, false)
         return ViewHolder(view)
     }
 

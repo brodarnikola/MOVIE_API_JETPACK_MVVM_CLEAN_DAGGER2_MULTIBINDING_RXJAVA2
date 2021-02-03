@@ -21,46 +21,48 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.vjezba.domain.model.MovieDetails
+import com.vjezba.data.database.MoviesDatabase
+import com.vjezba.data.database.mapper.DbMapper
+import com.vjezba.data.networking.ConnectivityUtil
+import com.vjezba.domain.model.MovieResult
+import com.vjezba.domain.model.Movies
+import com.vjezba.domain.model.Trailer
 import com.vjezba.domain.repository.MoviesRepository
+import io.reactivex.Observable
+import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 import javax.inject.Inject
 
 
-class MovieDetailsViewModel @Inject constructor(
-    val movieRepository: MoviesRepository
+class TrailersViewModel @Inject constructor(
+    private val moviesRepository: MoviesRepository
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val _newsDetailsMutableLiveData = MutableLiveData<MovieDetails>().apply {
-        value = MovieDetails( 0, false, "",  0L, "", "", "", "", 0.0, Date())
+    private val _trailerMutableLiveData = MutableLiveData<Trailer>().apply {
+        value = Trailer(0L, listOf())
     }
 
-    val newsDetailsList: LiveData<MovieDetails> = _newsDetailsMutableLiveData
+    val trailerList: LiveData<Trailer> = _trailerMutableLiveData
 
-    fun getMovieDetails(movieId: Long) {
-
-        movieRepository.getMoviesDetails(movieId)
+    fun getTrailers(movieId: Long) {
+        moviesRepository.getTrailers(movieId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .toObservable()
-            .subscribe(object : io.reactivex.Observer<MovieDetails> {
+            .subscribe(object : Observer<Trailer> {
                 override fun onSubscribe(d: Disposable) {
                     compositeDisposable.add(d)
                 }
 
-                override fun onNext(response: MovieDetails) {
-                    Log.d(ContentValues.TAG, "Da li ce uci sim EEEE: ${response}")
+                override fun onNext(response: Trailer) {
 
-                    _newsDetailsMutableLiveData.value?.let { news ->
-                        _newsDetailsMutableLiveData.value = response
-
-                        Log.d(ContentValues.TAG, "Da li ce uci sim FFFFFF: ${_newsDetailsMutableLiveData.value!!}")
+                    _trailerMutableLiveData.value?.let {
+                        _trailerMutableLiveData.value = response
                     }
                 }
 
@@ -82,3 +84,4 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
 }
+

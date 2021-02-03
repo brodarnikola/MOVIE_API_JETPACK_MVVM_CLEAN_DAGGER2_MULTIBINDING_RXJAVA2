@@ -19,6 +19,7 @@ package com.vjezba.data.networking
 
 import com.vjezba.data.networking.model.ApiMovies
 import com.vjezba.data.networking.model.ApiMovieDetails
+import com.vjezba.data.networking.model.ApiTrailers
 import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -32,8 +33,25 @@ interface MovieRepositoryApi {
     fun searchMovies(
     ): Flowable<ApiMovies>
 
+
+
     @GET("movie/{movieId}?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US")
     @Headers("Content-Type: application/json")
     fun getDetailsMovie( @Path("movieId") movieId: Long ): Flowable<ApiMovieDetails>
+
+
+
+    @GET("movie/{movieId}/videos?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US")
+    @Headers("Content-Type: application/json")
+    fun getTrailers( @Path("movieId") movieId: Long ): Flowable<ApiTrailers>
+
+
+
+
+
+
+    @GET("movie/{movieId}/credits?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US")
+    @Headers("Content-Type: application/json")
+    fun getActors( @Path("movieId") movieId: Long ): Flowable<ApiMovieDetails>
 
 }

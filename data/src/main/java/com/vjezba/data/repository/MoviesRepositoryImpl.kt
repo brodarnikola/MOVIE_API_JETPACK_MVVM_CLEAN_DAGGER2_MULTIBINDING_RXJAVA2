@@ -22,6 +22,7 @@ import com.vjezba.data.database.mapper.DbMapper
 import com.vjezba.data.networking.MovieRepositoryApi
 import com.vjezba.domain.model.MovieDetails
 import com.vjezba.domain.model.Movies
+import com.vjezba.domain.model.Trailer
 import com.vjezba.domain.repository.MoviesRepository
 import io.reactivex.Flowable
 
@@ -55,17 +56,13 @@ class MoviesRepositoryImpl constructor(
         return correctMoviesResult
     }
 
-    /*override suspend fun getNewsFromLocalDatabaseRoom(): Flowable<List<MovieResult>> {
-        val resultRoom = dbMovies.newsDao().getNews().map {
-            dbMapper?.mapDBNewsListToNormalNewsList(it) ?: Articles()
-        }
+    override fun getTrailers(movieId: Long): Flowable<Trailer> {
 
-        return Flowable.fromArray(resultRoom)
-        // Or we could return Flowable.just(News("", "", "", resultRoom)) from domain News..
-        // we just need to add this resultRoom to
-        // status, source, soryBy will be empty, because we don't need this data
-        //return Flowable.just(News("", "", "", resultRoom))
+        val moviesResult = service.getTrailers(movieId)
+
+        val correctMoviesResult = moviesResult.map { dbMapper?.mapApiTrailersToDomainTrailers(it)!! }
+
+        return correctMoviesResult
     }
-    */
 
 }

@@ -9,7 +9,7 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class FragmentBuildersModule {
 
-    @ContributesAndroidInjector
-    abstract fun contributeNewsDetailsFragment(): IntroViewPagerFragment
+    //@ContributesAndroidInjector
+    //abstract fun contributeNewsDetailsFragment(): IntroViewPagerFragment
 
 }
