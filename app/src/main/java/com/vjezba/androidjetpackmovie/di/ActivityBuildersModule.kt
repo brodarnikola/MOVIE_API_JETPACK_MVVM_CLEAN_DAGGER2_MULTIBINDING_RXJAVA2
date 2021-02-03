@@ -9,13 +9,18 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ActivityBuildersModule {
 
-    @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
+    //@ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
+    @ContributesAndroidInjector
     abstract fun contributeMoviesActivity(): MoviesActivity
 
-    @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
+    @ContributesAndroidInjector
     abstract fun contributeMovieDetailsActivity(): MoviesDetailsActivity
 
-    @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
+    @ContributesAndroidInjector
     abstract fun contributeTrailersActivity(): TrailersActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributeActorsActivity(): ActorsActivity
+
 
 }

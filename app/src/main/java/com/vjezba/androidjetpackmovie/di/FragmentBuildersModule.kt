@@ -1,7 +1,6 @@
 package com.vjezba.androidjetpackmovie.di
 
 
-import com.vjezba.androidjetpackmovie.ui.fragments.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

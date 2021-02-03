@@ -30,17 +30,12 @@
 
 package com.vjezba.data.database.mapper
 
-import com.google.gson.annotations.SerializedName
 import com.vjezba.data.database.model.DBMovies
+import com.vjezba.data.networking.model.ApiActors
 import com.vjezba.data.networking.model.ApiMovieDetails
 import com.vjezba.data.networking.model.ApiMovies
 import com.vjezba.data.networking.model.ApiTrailers
-import com.vjezba.domain.model.MovieDetails
-import com.vjezba.domain.model.MovieResult
-import com.vjezba.domain.model.Movies
-import com.vjezba.domain.model.Trailer
-import java.util.*
-import kotlin.collections.map
+import com.vjezba.domain.model.*
 
 class DbMapperImpl : DbMapper {
 
@@ -106,6 +101,15 @@ class DbMapperImpl : DbMapper {
             Trailer(
                 id,
                 results
+            )
+        }
+    }
+
+    override fun mapApiActorsToDomainActors(apiActors: ApiActors): Actors {
+        return with(apiActors) {
+             Actors(
+                 id,
+                 cast
             )
         }
     }
