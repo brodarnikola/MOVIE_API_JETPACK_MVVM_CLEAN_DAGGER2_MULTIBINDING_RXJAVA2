@@ -37,8 +37,8 @@ class MoviesRepositoryImpl constructor(
 ) : MoviesRepository {
 
     // example, practice of rxjava2
-    override fun getMovies(): Flowable<Movies> {
-        val moviesResult = service.searchMovies()
+    override fun getMovies(page: Int): Flowable<Movies> {
+        val moviesResult = service.searchMovies(page)
 
         Log.i("Da li ce uci", "AAAA Hoce li svakih 10 sekundi skinuti nove podatke")
         //Observable.concatArrayEager(newsResult, observableFromDB)

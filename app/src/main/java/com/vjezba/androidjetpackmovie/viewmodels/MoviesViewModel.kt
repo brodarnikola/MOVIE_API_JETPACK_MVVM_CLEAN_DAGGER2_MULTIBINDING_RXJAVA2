@@ -51,7 +51,7 @@ class MoviesViewModel @Inject constructor(
 
     val moviesList: LiveData<Movies> = _moviesMutableLiveData
 
-    fun getMoviesFromServer() {
+    fun getMoviesFromServer(page: Int) {
         if (connectivityUtil.isConnectedToInternet()) {
 
 //            val list = IntRange(0, 9).toList()
@@ -67,7 +67,8 @@ class MoviesViewModel @Inject constructor(
 //                }
 
             tryToCreateObservableEvery20Seconds()
-            getMoviesFromNetwork()
+
+            getMoviesFromNetwork(page)
         }
         else {
 
@@ -90,8 +91,8 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
-    private fun getMoviesFromNetwork() {
-        moviesRepository.getMovies()
+    private fun getMoviesFromNetwork(page: Int) {
+        moviesRepository.getMovies(page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .toObservable()
@@ -117,7 +118,9 @@ class MoviesViewModel @Inject constructor(
                     )
                 }
 
-                override fun onComplete() {}
+                override fun onComplete() {
+
+                }
             })
     }
 

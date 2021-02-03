@@ -1,11 +1,11 @@
 package com.vjezba.androidjetpackmovie.ui.adapters
 
-import android.content.ContentValues
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -16,96 +16,119 @@ import com.vjezba.androidjetpackmovie.ui.utilities.ListDiffer
 import com.vjezba.domain.model.MovieResult
 import kotlinx.android.synthetic.main.movies_list.view.*
 
-class MoviesAdapter(var MovieResultList: MutableList<MovieResult>,
-                    val MovieResultClickListener: (Long) -> Unit )
-    : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
+class MoviesAdapter(
+    var movieResultList: MutableList<MovieResult>,
+    val MovieResultClickListener: (Long) -> Unit
+) : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private var isLoaderVisible = false
+
+    enum class ITEM_TYPES(val typeValue: Int) {
+        VIEW_TYPE_NORMAL(0),
+        VIEW_TYPE_LOADING(1);
+
+        companion object {
+            fun from(findViewByIdValue: Int): ITEM_TYPES =
+                values().first { it.typeValue == findViewByIdValue }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (isLoaderVisible) {
+            if (position == movieResultList.size - 1) ITEM_TYPES.VIEW_TYPE_LOADING.typeValue else ITEM_TYPES.VIEW_TYPE_NORMAL.typeValue
+        } else {
+            ITEM_TYPES.VIEW_TYPE_NORMAL.typeValue
+        }
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val viewType = movieResultList[position]
+        when (viewType.showProgressBar) {
+            true -> {
+                holder as ProgressHolder
+            }
+            else -> {
+
+                holder as MovieViewHolder
+                holder.bindItem( holder, movieResultList[position] )
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
+        if (viewType == 0) {
+            val itemView =
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.movies_list, parent, false)
+            return MovieViewHolder(itemView)
+        } else {
+            val itemView =
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.loading_list, parent, false)
+            return ProgressHolder(itemView)
+        }
+    }
+
+    open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    inner class ProgressHolder(itemView: View) : ViewHolder(itemView) {
+    }
+
+    inner class MovieViewHolder(itemView: View) : ViewHolder(itemView) {
         val photo: ImageView = itemView.imagePhoto
         val layoutParent: ConstraintLayout = itemView.parentLayout
 
         val title: TextView = itemView.textTitleName
         val description: TextView = itemView.textDescription
         val popularity: TextView = itemView.textPopularity
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.movies_list, parent, false)
-        return ViewHolder(view)
-    }
+        fun bindItem(holder: ViewHolder, article: MovieResult) {
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        bindItem(holder, MovieResultList[position], position)
-    }
+            Glide.with(holder.itemView)
+                .load("https://image.tmdb.org/t/p/w500/" + article.backdropPath)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(photo)
 
-    fun updateDevices(updatedDevices: MutableList<MovieResult>) {
+            title.text = "Name: " + article.originalTitle
+            description.text = "Description: " + article.overview
+            popularity.text = "Popularity: " + article.popularity
 
-        val listDiff = ListDiffer.getDiff(
-            MovieResultList,
-            updatedDevices,
-            { old, new ->
-                old.id == new.id &&
-                old.adult == new.adult &&
-                        old.backdropPath == new.backdropPath &&
-                        old.genreIds == new.genreIds &&
-                        old.originalLanguage == new.originalLanguage &&
-                        old.originalTitle == new.originalTitle &&
-                        old.overview == new.overview
-            })
-
-        for (diff in listDiff) {
-            when (diff) {
-                is ListDiffer.DiffInserted -> {
-                    MovieResultList.addAll(diff.elements)
-                    Log.d("notifyItemRangeInserted", "notifyItemRangeInserted")
-                    notifyItemRangeInserted(diff.position, diff.elements.size)
-                }
-                is ListDiffer.DiffRemoved -> {
-                    //remove devices
-                    for (i in (MovieResultList.size - 1) downTo diff.position) {
-                        MovieResultList.removeAt(i)
-                    }
-                    Log.d("notifyItemRangeRemoved", "notifyItemRangeRemoved")
-                    notifyItemRangeRemoved(diff.position, diff.count)
-                }
-                is ListDiffer.DiffChanged -> {
-                    MovieResultList[diff.position] = diff.newElement
-                    Log.d("notifyItemChanged", "notifyItemChanged")
-                    notifyItemChanged(diff.position)
-                }
+            layoutParent.setOnClickListener {
+                article.id?.let { it -> MovieResultClickListener(it) }
             }
         }
     }
 
+    override fun getItemCount(): Int {
+        return movieResultList.size
+    }
 
-    private fun bindItem(holder: ViewHolder, article: MovieResult, position: Int) {
 
-        Glide.with(holder.itemView)
-            .load( "https://image.tmdb.org/t/p/w500/" + article.backdropPath)
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.placeholder)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(holder.photo)
+    fun addLoading() {
+        isLoaderVisible = true
+        val deliverParcel = MovieResult()
+        deliverParcel.showProgressBar = true
+        movieResultList.add(deliverParcel)
+        notifyItemInserted(movieResultList.size - 1)
+    }
 
-        holder.title.text = "Name: " + article.originalTitle
-        holder.description.text = "Description: " + article.overview
-        holder.popularity.text = "Popularity: " + article.popularity
-
-        holder.layoutParent.setOnClickListener{
-            article.id?.let { it -> MovieResultClickListener(it) }
+    fun removeLoading() {
+        isLoaderVisible = false
+        val position: Int = movieResultList.size - 1
+        val item = movieResultList[position]
+        if (item != null) {
+            movieResultList.removeAt(position)
+            notifyItemRemoved(position)
         }
     }
 
-    override fun getItemCount(): Int {
-        return MovieResultList.size
+    fun updateDevices(updatedDevices: MutableList<MovieResult>) {
+        movieResultList.addAll(updatedDevices)
+        notifyItemRangeInserted(movieResultList.size, updatedDevices.size)
     }
 
-    fun setItems(data: List<MovieResult>) {
-        Log.d(ContentValues.TAG, "Da li ce uci sim ooo: ${data.joinToString { "-" }}")
-        MovieResultList.addAll(data)
-        notifyDataSetChanged()
-    }
-
-    fun getItems() = MovieResultList
 
 }
