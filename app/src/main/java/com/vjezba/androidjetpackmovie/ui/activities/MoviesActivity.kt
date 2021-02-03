@@ -20,8 +20,10 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import kotlinx.android.synthetic.main.activity_movie.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -113,17 +115,6 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
         moviesViewModel.getMoviesFromServer(page)
 
         Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu pageNumber is: ${page}")
-//        lifecycleScope.launch() {
-//            withTimeout(20000) {
-//                page++
-//                insertDataIntoList(page)
-//                withContext(Dispatchers.Main) {
-//                    loading = false
-//                    notificationKeysAdapter.removeLoading()
-//                    notificationKeysAdapter.updateDevices(listNotificationKeys)
-//                }
-//            }
-//        }
     }
 
     private fun setMoviesClickListener(movieId: Long) {

@@ -33,6 +33,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -53,21 +54,6 @@ class MoviesViewModel @Inject constructor(
 
     fun getMoviesFromServer(page: Int) {
         if (connectivityUtil.isConnectedToInternet()) {
-
-//            val list = IntRange(0, 9).toList()
-//            val disposable = Observable
-//                .interval(0,5, TimeUnit.SECONDS)
-//
-//                .map { savedLanguages.getNews() }
-//                //.map { i -> list[i.toInt()] }
-//                .take(list.size.toLong())
-//                .subscribe {
-//                    it.blockingFirst()
-//                    println("item: $it")
-//                }
-
-            tryToCreateObservableEvery20Seconds()
-
             getMoviesFromNetwork(page)
         }
         else {
@@ -105,8 +91,6 @@ class MoviesViewModel @Inject constructor(
 
                     insertMoviesIntoDB(response)
 
-                    //_moviesMutableLiveData.value = response
-
                     _moviesMutableLiveData.value?.let { _moviesMutableLiveData.value = response
                     }
                 }
@@ -130,52 +114,6 @@ class MoviesViewModel @Inject constructor(
             compositeDisposable.dispose()
     }
 
-    private fun tryToCreateObservableEvery20Seconds() {
-        //                Observable.interval(
-//                    10,
-//                    TimeUnit.SECONDS,
-//                    Schedulers.io()
-//                )
-//                    .observeOn(Schedulers.newThread())
-//                    .map { tick: Long? -> savedLanguages.getNews() }
-//                    .doOnError { error: Throwable ->
-//                        Log.e(
-//                            "error",
-//                            error.toString()
-//                        )
-//                    }
-//                    .doOnSubscribe {
-//                        compositeDisposable.add(it)
-//                    }
-//                    .doOnNext {
-//
-//                        Log.i(
-//                            "Da li ce uci",
-//                            "BBBB Hoce li svakih 10 sekundi skinuti nove podatke, unutar viewmodela DATA IS ${it.blockingFirst().result.size}"
-//                        )
-//                        val test5 = it.blockingFirst()
-//
-//                        _newsMutableLiveData.value?.let { news ->
-//                            _newsMutableLiveData.value = test5
-//                        }
-//                    }
-//                    .retry()
-//                    .subscribe {
-//                        Log.i(
-//                            "Da li ce uci",
-//                            "Hoce li svakih 10 sekundi skinuti nove podatke, unutar viewmodela DATA IS ${it.blockingFirst().result.size}"
-//                        )
-//                        val test5 = it.blockingFirst()
-//                        insertNewsIntoDB(test5)
-//
-//                        it.doOnNext {
-//                            _newsMutableLiveData.value?.let { news ->
-//                                _newsMutableLiveData.value = it
-//                            }
-//                        }
-//                    }
-    }
-
     private fun getMoviesFromDb(): List<MovieResult> {
         return dbMovies.moviesDAO().getMovies().map {
             dbMapper?.mapDBMoviesListToMovies(it) ?: MovieResult(
@@ -189,14 +127,18 @@ class MoviesViewModel @Inject constructor(
 
         Observable.fromCallable {
 
-            dbMovies.moviesDAO().updateMovies(
-                dbMapper?.mapDomainMoviesToDbMovies(movies) ?: listOf()
-            )
-            Log.d(
-                "da li ce uci unutra * ",
-                "da li ce uci unutra, spremiti podatke u bazu podataka: " + toString() )
+            if( movies != null ) {
+                dbMovies.moviesDAO().updateMovies(
+                    dbMapper?.mapDomainMoviesToDbMovies(movies) ?: listOf()
+                )
+                Log.d(
+                    "da li ce uci unutra * ",
+                    "da li ce uci unutra, spremiti podatke u bazu podataka: " + toString()
+                )
+            }
 
         }
+            .doOnError { Log.e("Error in observables", "Error is: ${it.message}, ${throw it}") }
             .subscribeOn(Schedulers.io())
             .subscribe {
                 Log.d( "Hoce spremiti vijesti","Inserted ${  movies.result.size} movies from API in DB...")
