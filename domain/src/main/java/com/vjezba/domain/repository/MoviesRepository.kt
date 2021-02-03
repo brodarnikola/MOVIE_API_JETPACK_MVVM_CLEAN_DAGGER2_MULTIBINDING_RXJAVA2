@@ -25,8 +25,7 @@ import io.reactivex.Flowable
 
 interface MoviesRepository {
 
-    // practice of rxjava2
-    fun getMovies() : Flowable<Movies>
+    fun getMovies(page: Int) : Flowable<Movies>
 
     fun getMoviesDetails(movieId: Long) : Flowable<MovieDetails>
 
