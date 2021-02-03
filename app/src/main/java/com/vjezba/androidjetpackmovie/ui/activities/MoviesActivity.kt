@@ -121,6 +121,7 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
         val intent = Intent( this, MoviesDetailsActivity::class.java )
         intent.putExtra("movieId", movieId)
         startActivity(intent)
+        finish()
     }
 
 }
