@@ -19,7 +19,7 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(NewsDetailsViewModel::class)
-    abstract fun bindNewsDetailsActivityViewModel(viewModel: NewsDetailsViewModel): ViewModel
+    @ViewModelKey(MovieDetailsViewModel::class)
+    abstract fun bindNewsDetailsActivityViewModel(viewModel: MovieDetailsViewModel): ViewModel
 
 }

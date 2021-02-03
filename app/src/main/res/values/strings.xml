@@ -30,7 +30,7 @@
     <string name="created_at">Created at</string>
 
 
-    <string name="share_text_language_details">Check out the %s language details in the Android Github app</string>
+    <string name="share_text_details">Check out the %s movie details in the Android Movie app</string>
     <string name="saved_language_successfully">Saved language successfully</string>
 
     <string name="gallery_title">Repositories by</string>

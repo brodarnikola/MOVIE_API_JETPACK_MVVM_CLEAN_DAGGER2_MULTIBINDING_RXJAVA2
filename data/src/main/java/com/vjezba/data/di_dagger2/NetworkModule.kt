@@ -34,7 +34,7 @@ import javax.inject.Singleton
 
 
 
-private const val RETROFIT_BASE_URL = "https://api.themoviedb.org/3/discover/"
+private const val RETROFIT_BASE_URL = "https://api.themoviedb.org/3/"
 
 @Module
 class NetworkModule {

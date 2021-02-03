@@ -2,10 +2,7 @@ package com.vjezba.data.networking.model
 
 
 import com.google.gson.annotations.SerializedName
-import com.vjezba.domain.model.Articles
 import com.vjezba.domain.model.MovieResult
-import com.vjezba.domain.model.Movies
-import com.vjezba.domain.model.News
 
 data class ApiMovies(
 

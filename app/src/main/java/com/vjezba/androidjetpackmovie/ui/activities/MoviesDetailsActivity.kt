@@ -1,31 +1,30 @@
 package com.vjezba.androidjetpackmovie.ui.activities
 
 import android.app.Activity
-import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.vjezba.androidjetpackmovie.R
 import com.vjezba.androidjetpackmovie.di.ViewModelFactory
 import com.vjezba.androidjetpackmovie.di.injectViewModel
-import com.vjezba.androidjetpackmovie.ui.adapters.NewsDetailsRecyclerViewAdapter
-import com.vjezba.androidjetpackmovie.ui.fragments.IntroViewPagerFragment
-import com.vjezba.androidjetpackmovie.ui.utilities.PagerNewsDetailsDecorator
-import com.vjezba.androidjetpackmovie.viewmodels.NewsDetailsViewModel
+import com.vjezba.androidjetpackmovie.viewmodels.MovieDetailsViewModel
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_news_details.*
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 class MoviesDetailsActivity : AppCompatActivity(), HasActivityInjector, HasSupportFragmentInjector {
 
-    var position = 0
+    var movieId = 0L
 
     @Inject
     lateinit var dispatchingAndroidActivityInjector: DispatchingAndroidInjector<Activity>
@@ -38,101 +37,85 @@ class MoviesDetailsActivity : AppCompatActivity(), HasActivityInjector, HasSuppo
     override fun supportFragmentInjector() = dispatchingAndroidFragmentInjector
 
     @Inject lateinit var viewModelFactory: ViewModelFactory
-    lateinit var newsDetailsViewModel: NewsDetailsViewModel
+    lateinit var movieDetailsViewModel: MovieDetailsViewModel
 
     private var dataFetched = false
 
-
-    private var newDetailsRecyclerViewAdapter: NewsDetailsRecyclerViewAdapter =
-        NewsDetailsRecyclerViewAdapter(
-            mutableListOf(),
-        this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_details)
 
-        newsDetailsViewModel = injectViewModel(viewModelFactory)
-    }
-
-    override fun onStart() {
-        super.onStart()
+        movieDetailsViewModel = injectViewModel(viewModelFactory)
 
         this.setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        position = intent.getIntExtra("listPosition", 0)
+        movieId = intent.getLongExtra("movieId", 0L)
+    }
 
-        setupRecyclerViewProperties()
-        setupFragmentProperties()
+    override fun onStart() {
+        super.onStart()
 
-        radioGroupViewSelected.setOnCheckedChangeListener { radioGroup, checkedId ->
-            val radioButton: View = radioGroup.findViewById(checkedId)
-            val index: Int = radioGroup.indexOfChild(radioButton)
-            when (index) {
-                0 -> {
-                    fragmentData.visibility = View.VISIBLE
-                    recylcerViewData.visibility = View.GONE
-                }
-                1 -> {
-                    fragmentData.visibility = View.GONE
-                    recylcerViewData.visibility = View.VISIBLE
-                    getDataOnlyOnce()
-                }
+        movieDetailsViewModel.newsDetailsList.observe(this, Observer { movie ->
+            tvName.text = movie.originalTitle
+            tvHomePage.text = "Web site: " + movie.homepage
+
+            Glide.with(this)
+                .load( "https://image.tmdb.org/t/p/w500/" + movie.backdropPath)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(ivMovie)
+
+            tvBudget.text = "Budget: " + movie.budget
+
+            val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
+            val date: String = simpleDateFormat.format(movie.releaseDate)
+            tvReleaseDate.text = "Release date: " + date
+        })
+
+        movieDetailsViewModel.getMovieDetails(movieId)
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_share, menu)
+        return true
+    }
+    // Helper function for calling a share functionality.
+    // Should be used when user presses a share button/menu item.
+    @Suppress("DEPRECATION")
+    private fun createShareIntent() {
+        val shareText = movieDetailsViewModel.newsDetailsList.value.let { data ->
+            if (data == null) {
+                ""
+            } else {
+                getString(R.string.share_text_details, data.originalTitle)
             }
         }
-
-    }
-
-    private fun setupRecyclerViewProperties() {
-        recylcerViewData.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
-        recylcerViewData.adapter = newDetailsRecyclerViewAdapter
-
-        PagerSnapHelper().attachToRecyclerView(recylcerViewData)
-        recylcerViewData.addItemDecoration(PagerNewsDetailsDecorator())
-    }
-
-    private fun setupFragmentProperties() {
-        val fragment =
-            IntroViewPagerFragment()
-        val bundle = Bundle()
-        bundle.putInt("listPosition",  position)
-        fragment.setArguments(bundle)
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragmentData, fragment).commit()
-
-        fragmentData.visibility = View.GONE
-    }
-
-    private fun getDataOnlyOnce() {
-        if( !dataFetched ) {
-
-            progressBar.visibility = View.VISIBLE
-            Log.d(ContentValues.TAG, "Da li ce uci sim BORUSIA MONCHEN GLADBACH: ")
-            newsDetailsViewModel.newsDetailsList.observe(this, Observer { news ->
-
-                progressBar.visibility = View.GONE
-                dataFetched = true
-
-                newDetailsRecyclerViewAdapter.updateDevices(news.toMutableList())
-                recylcerViewData.scrollToPosition(position)
-            })
-
-            newsDetailsViewModel.getNewsFromLocalDatabaseRoom()
-        }
+        val shareIntent = ShareCompat.IntentBuilder.from(this)
+            .setText(shareText)
+            .setType("text/plain")
+            .createChooserIntent()
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        startActivity(shareIntent)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            R.id.action_share -> {
+                createShareIntent()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

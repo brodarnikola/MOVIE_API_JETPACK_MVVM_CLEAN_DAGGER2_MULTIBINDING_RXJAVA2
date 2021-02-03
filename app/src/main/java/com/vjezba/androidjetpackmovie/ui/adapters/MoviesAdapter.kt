@@ -17,7 +17,7 @@ import com.vjezba.domain.model.MovieResult
 import kotlinx.android.synthetic.main.news_list.view.*
 
 class MoviesAdapter(var MovieResultList: MutableList<MovieResult>,
-                    val MovieResultClickListener: (Int) -> Unit )
+                    val MovieResultClickListener: (Long) -> Unit )
     : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -92,7 +92,7 @@ class MoviesAdapter(var MovieResultList: MutableList<MovieResult>,
         holder.popularity.text = "Popularity: " + article.popularity
 
         holder.layoutParent.setOnClickListener{
-            MovieResultClickListener(position)
+            article.id?.let { it -> MovieResultClickListener(it) }
         }
     }
 

@@ -32,11 +32,12 @@ package com.vjezba.data.database.mapper
 
 import com.google.gson.annotations.SerializedName
 import com.vjezba.data.database.model.DBMovies
+import com.vjezba.data.networking.model.ApiMovieDetails
 import com.vjezba.data.networking.model.ApiMovies
-import com.vjezba.domain.model.Articles
+import com.vjezba.domain.model.MovieDetails
 import com.vjezba.domain.model.MovieResult
 import com.vjezba.domain.model.Movies
-import com.vjezba.domain.model.News
+import java.util.*
 import kotlin.collections.map
 
 class DbMapperImpl : DbMapper {
@@ -48,6 +49,23 @@ class DbMapperImpl : DbMapper {
                 results,
                 totalPages,
                 totalResults
+            )
+        }
+    }
+
+    override fun mapApiMovieDetailsToDomainMovieDetails(apiMovieDetails: ApiMovieDetails): MovieDetails {
+        return with(apiMovieDetails) {
+            MovieDetails(
+                id,
+                adult,
+                backdropPath,
+                budget,
+                homepage,
+                originalLanguage,
+                originalTitle,
+                overview,
+                popularity,
+                releaseDate
             )
         }
     }

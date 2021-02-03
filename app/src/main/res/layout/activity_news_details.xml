@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_blue_dark"
-        app:layout_constraintBottom_toTopOf="@+id/tvCorrectName"
+        app:layout_constraintBottom_toTopOf="@+id/tvName"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="REPOSITORY DETAILS"
+                android:text="MOVIE DETAILS"
                 android:textColor="@android:color/white"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -38,69 +38,61 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:id="@+id/tvCorrectName"
+        android:id="@+id/tvName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="How do you want to display data: 1) ViewPager or 2) RecyclerView"
+        android:text=""
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"  />
 
-    <RadioGroup
-        android:id="@+id/radioGroupViewSelected"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvCorrectName" >
-
-        <RadioButton
-            android:id="@+id/radioButtonViewPager"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ViewPager"/>
-
-        <RadioButton
-            android:id="@+id/radioButtonRecyclerView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RecyclerView"/>
-
-    </RadioGroup>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recylcerViewData"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@android:color/holo_blue_dark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/radioGroupViewSelected"  />
-
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
+    <ImageView
+        android:id="@+id/ivMovie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@id/tvName"  />
 
-
-    <FrameLayout
-        android:id="@+id/fragmentData"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/tvHomePage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/radioGroupViewSelected"  />
+        app:layout_constraintTop_toBottomOf="@id/ivMovie"  />
 
+    <TextView
+        android:id="@+id/tvBudget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvHomePage"  />
+
+    <TextView
+        android:id="@+id/tvReleaseDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvBudget"  />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

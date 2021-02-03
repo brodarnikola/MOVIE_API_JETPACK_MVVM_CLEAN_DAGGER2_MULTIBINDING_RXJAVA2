@@ -18,11 +18,8 @@ package com.vjezba.data.networking
 
 
 import com.vjezba.data.networking.model.ApiMovies
-import com.vjezba.data.networking.model.ApiNews
+import com.vjezba.data.networking.model.ApiMovieDetails
 import io.reactivex.Flowable
-import io.reactivex.Observable
-import kotlinx.coroutines.Deferred
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
@@ -30,9 +27,13 @@ import retrofit2.http.Path
 
 interface MovieRepositoryApi {
 
-    @GET("movie?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1")
+    @GET("discover/movie?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1")
     @Headers("Content-Type: application/json")
-    fun searchMoviesWithFlowable(
+    fun searchMovies(
     ): Flowable<ApiMovies>
+
+    @GET("movie/{movieId}?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US")
+    @Headers("Content-Type: application/json")
+    fun getDetailsMovie( @Path("movieId") movieId: Long ): Flowable<ApiMovieDetails>
 
 }

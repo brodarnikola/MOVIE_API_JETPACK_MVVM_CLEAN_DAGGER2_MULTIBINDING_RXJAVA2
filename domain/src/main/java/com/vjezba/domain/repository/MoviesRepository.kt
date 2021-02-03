@@ -16,11 +16,9 @@
 
 package com.vjezba.domain.repository
 
-import com.vjezba.domain.model.Articles
+import com.vjezba.domain.model.MovieDetails
 import com.vjezba.domain.model.Movies
-import com.vjezba.domain.model.News
 import io.reactivex.Flowable
-import io.reactivex.Observable
 
 
 interface MoviesRepository {
@@ -28,5 +26,6 @@ interface MoviesRepository {
     // practice of rxjava2
     fun getMovies() : Flowable<Movies>
 
-    //suspend fun getNewsFromLocalDatabaseRoom() : Flowable<List<Articles>>
+    fun getMoviesDetails(movieId: Long) : Flowable<MovieDetails>
+
 }

@@ -54,7 +54,7 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
         viewLoaded = true
 
         moviesAdapter = MoviesAdapter( mutableListOf<MovieResult>(),
-            { position: Int -> setMoviesClickListener( position ) }  )
+            { movieId: Long -> setMoviesClickListener( movieId ) }  )
 
         movies_list.apply {
             layoutManager = moviesLayoutManager
@@ -72,9 +72,9 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
         moviesViewModel.getMoviesFromServer()
     }
 
-    private fun setMoviesClickListener(position: Int) {
+    private fun setMoviesClickListener(movieId: Long) {
         val intent = Intent( this, MoviesDetailsActivity::class.java )
-        intent.putExtra("listPosition", position)
+        intent.putExtra("movieId", movieId)
         startActivity(intent)
     }
 

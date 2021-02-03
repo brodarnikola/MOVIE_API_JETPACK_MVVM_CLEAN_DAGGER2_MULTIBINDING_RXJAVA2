@@ -20,6 +20,7 @@ import android.util.Log
 import com.vjezba.data.database.MoviesDatabase
 import com.vjezba.data.database.mapper.DbMapper
 import com.vjezba.data.networking.MovieRepositoryApi
+import com.vjezba.domain.model.MovieDetails
 import com.vjezba.domain.model.Movies
 import com.vjezba.domain.repository.MoviesRepository
 import io.reactivex.Flowable
@@ -35,12 +36,21 @@ class MoviesRepositoryImpl constructor(
 
     // example, practice of rxjava2
     override fun getMovies(): Flowable<Movies> {
-        val moviesResult = service.searchMoviesWithFlowable()
+        val moviesResult = service.searchMovies()
 
         Log.i("Da li ce uci", "AAAA Hoce li svakih 10 sekundi skinuti nove podatke")
         //Observable.concatArrayEager(newsResult, observableFromDB)
 
         val correctMoviesResult = moviesResult.map { dbMapper?.mapApiMoviesToDomainMovies(it)!! }
+
+        return correctMoviesResult
+    }
+
+    override fun getMoviesDetails( movieId: Long ): Flowable<MovieDetails> {
+
+        val moviesResult = service.getDetailsMovie(movieId)
+
+        val correctMoviesResult = moviesResult.map { dbMapper?.mapApiMovieDetailsToDomainMovieDetails(it)!! }
 
         return correctMoviesResult
     }
