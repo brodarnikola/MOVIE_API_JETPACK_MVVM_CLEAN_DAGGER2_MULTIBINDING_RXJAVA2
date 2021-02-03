@@ -18,4 +18,7 @@ data class MovieResult(
 
     val overview: String = "",
 
-    val popularity: Double = 0.0 )
+    val popularity: Double = 0.0,
+
+    var showProgressBar: Boolean = false
+    )

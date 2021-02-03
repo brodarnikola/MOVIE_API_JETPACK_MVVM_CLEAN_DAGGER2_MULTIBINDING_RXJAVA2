@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vjezba.androidjetpackmovie.R
+import com.vjezba.androidjetpackmovie.customcontrol.RecyclerViewPaginationListener
 import com.vjezba.androidjetpackmovie.di.ViewModelFactory
 import com.vjezba.androidjetpackmovie.di.injectViewModel
 import com.vjezba.androidjetpackmovie.ui.adapters.MoviesAdapter
@@ -18,8 +19,13 @@ import com.vjezba.domain.model.MovieResult
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import kotlinx.android.synthetic.main.activity_movie.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
+
+const val pageSize: Int = 20
 
 class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjector {
 
@@ -28,12 +34,15 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
 
     override fun activityInjector() = dispatchingAndroidActivityInjector
 
-
     @Inject lateinit var viewModelFactory: ViewModelFactory
     lateinit var moviesViewModel: MoviesViewModel
 
     private lateinit var moviesAdapter: MoviesAdapter
     val moviesLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+    private var isLastPage = false
+    private var loading = false
+    private var page: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +61,22 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
         super.onStart()
         viewLoaded = true
 
+        initializeUi()
+
+        moviesViewModel.moviesList.observe(this@MoviesActivity, Observer { news ->
+            Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu: ${news.result.joinToString { "-" }}")
+            progressBar.visibility = View.GONE
+            if( page > 1 )
+                moviesAdapter.removeLoading()
+            loading = false
+            moviesAdapter.updateDevices(news.result.toMutableList())
+        })
+
+        moviesViewModel.getMoviesFromServer(page)
+    }
+
+    private fun initializeUi() {
+
         moviesAdapter = MoviesAdapter( mutableListOf<MovieResult>(),
             { movieId: Long -> setMoviesClickListener( movieId ) }  )
 
@@ -59,16 +84,46 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
             layoutManager = moviesLayoutManager
             adapter = moviesAdapter
         }
-
         movies_list.adapter = moviesAdapter
 
-        moviesViewModel.moviesList.observe(this@MoviesActivity, Observer { news ->
-            Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu: ${news.result.joinToString { "-" }}")
-            progressBar.visibility = View.GONE
-            moviesAdapter.updateDevices(news.result.toMutableList())
-        })
 
-        moviesViewModel.getMoviesFromServer()
+        /**
+         * add scroll listener while user reach in bottom load more will call
+         */
+        movies_list.addOnScrollListener(object : RecyclerViewPaginationListener(moviesLayoutManager) {
+
+            override fun loadMoreItems() {
+                loading = true
+                doRestApiCall()
+            }
+
+            override fun isLastPage(): Boolean {
+                return isLastPage
+            }
+
+            override fun isLoading(): Boolean {
+                return loading
+            }
+        })
+    }
+
+    private fun doRestApiCall() {
+        moviesAdapter.addLoading()
+        page++
+        moviesViewModel.getMoviesFromServer(page)
+
+        Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu pageNumber is: ${page}")
+//        lifecycleScope.launch() {
+//            withTimeout(20000) {
+//                page++
+//                insertDataIntoList(page)
+//                withContext(Dispatchers.Main) {
+//                    loading = false
+//                    notificationKeysAdapter.removeLoading()
+//                    notificationKeysAdapter.updateDevices(listNotificationKeys)
+//                }
+//            }
+//        }
     }
 
     private fun setMoviesClickListener(movieId: Long) {

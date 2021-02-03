@@ -25,14 +25,14 @@ import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 interface MovieRepositoryApi {
 
-    @GET("discover/movie?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1")
+    @GET("discover/movie?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page")
     @Headers("Content-Type: application/json")
-    fun searchMovies(
-    ): Flowable<ApiMovies>
+    fun searchMovies( @Query("page") page: Int ): Flowable<ApiMovies>
 
     @GET("movie/{movieId}?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US")
     @Headers("Content-Type: application/json")
