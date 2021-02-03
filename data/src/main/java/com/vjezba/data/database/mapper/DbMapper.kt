@@ -1,18 +1,19 @@
 package com.vjezba.data.database.mapper
 
-import com.vjezba.data.database.model.DBNews
-import com.vjezba.data.networking.model.ApiNews
+import com.vjezba.data.database.model.DBMovies
+import com.vjezba.data.networking.model.ApiMovies
 import com.vjezba.domain.model.Articles
+import com.vjezba.domain.model.MovieResult
+import com.vjezba.domain.model.Movies
 import com.vjezba.domain.model.News
-import io.reactivex.Flowable
 
 
 interface DbMapper {
 
-    fun mapApiNewsToDomainNews(apiNews: ApiNews): News
+    fun mapApiMoviesToDomainMovies(apiNews: ApiMovies): Movies
 
-    fun mapDomainNewsToDbNews(newsList: News): List<DBNews>
+    fun mapDomainMoviesToDbMovies(newsList: Movies): List<DBMovies>
 
-    fun mapDBNewsListToNormalNewsList(articlesList: DBNews): Articles
+    fun mapDBMoviesListToMovies(articlesList: DBMovies): MovieResult
 
 }

@@ -51,6 +51,8 @@ dependencies {
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
 
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+
     // rxjava
     implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
 

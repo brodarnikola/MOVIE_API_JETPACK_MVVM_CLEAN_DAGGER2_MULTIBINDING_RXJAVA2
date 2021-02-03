@@ -32,16 +32,17 @@ package com.vjezba.data.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
 
-@Entity(tableName = "news_table")
-data class DBNews(
+@Entity(tableName = "movie_table")
+data class DBMovies(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
-    val author: String,
-    val title: String,
-    val description: String,
-    val url: String,
-    val urlToImage: String,
-    val publishedAt: String
+    val idOfMovie: Long,
+    val backdropPath: String,
+    val originalLanguage: String,
+    val originalTitle: String,
+    val overview: String,
+    val popularity: Double
 )

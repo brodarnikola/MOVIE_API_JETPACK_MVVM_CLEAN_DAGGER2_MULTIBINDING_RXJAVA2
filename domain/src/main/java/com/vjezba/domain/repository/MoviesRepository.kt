@@ -14,26 +14,19 @@
  * limitations under the License.
  */
 
-package com.vjezba.data.di
+package com.vjezba.domain.repository
 
-import android.app.Application
-import com.vjezba.data.database.MoviesDatabase
-import com.vjezba.data.database.dao.MoviesDao
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
-
-@Module
-class DatabaseModule {
-
-   @Singleton
-    @Provides
-    fun provideAppDatabase( app: Application) = MoviesDatabase.create(app)
-
-    @Provides
-    fun providePlantDao(moviesDatabase: MoviesDatabase): MoviesDao {
-        return moviesDatabase.moviesDAO()
-    }
+import com.vjezba.domain.model.Articles
+import com.vjezba.domain.model.Movies
+import com.vjezba.domain.model.News
+import io.reactivex.Flowable
+import io.reactivex.Observable
 
 
+interface MoviesRepository {
+
+    // practice of rxjava2
+    fun getMovies() : Flowable<Movies>
+
+    //suspend fun getNewsFromLocalDatabaseRoom() : Flowable<List<Articles>>
 }

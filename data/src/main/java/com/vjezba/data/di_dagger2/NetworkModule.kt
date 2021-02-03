@@ -22,7 +22,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.vjezba.data.BuildConfig
 import com.vjezba.data.networking.ConnectivityUtil
-import com.vjezba.data.networking.GithubRepositoryApi
+import com.vjezba.data.networking.MovieRepositoryApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -34,7 +34,7 @@ import javax.inject.Singleton
 
 
 
-private const val RETROFIT_BASE_URL = "https://newsapi.org/v1/"
+private const val RETROFIT_BASE_URL = "https://api.themoviedb.org/3/discover/"
 
 @Module
 class NetworkModule {
@@ -77,10 +77,10 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideGithubService(retrofit: Retrofit.Builder): GithubRepositoryApi {
+    fun provideGithubService(retrofit: Retrofit.Builder): MovieRepositoryApi {
         return retrofit
             .build()
-            .create(GithubRepositoryApi::class.java)
+            .create(MovieRepositoryApi::class.java)
     }
 
     @Provides

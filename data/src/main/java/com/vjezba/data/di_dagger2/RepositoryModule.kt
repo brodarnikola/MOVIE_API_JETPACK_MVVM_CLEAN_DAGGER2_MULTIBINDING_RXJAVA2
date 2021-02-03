@@ -16,12 +16,11 @@
 
 package com.vjezba.data.di
 
-import com.vjezba.data.database.NewsDatabase
+import com.vjezba.data.database.MoviesDatabase
 import com.vjezba.data.database.mapper.DbMapper
-import com.vjezba.data.networking.ConnectivityUtil
-import com.vjezba.data.networking.GithubRepositoryApi
-import com.vjezba.data.repository.NewsRepositoryImpl
-import com.vjezba.domain.repository.NewsRepository
+import com.vjezba.data.networking.MovieRepositoryApi
+import com.vjezba.data.repository.MoviesRepositoryImpl
+import com.vjezba.domain.repository.MoviesRepository
 import dagger.Module
 import dagger.Provides
 
@@ -30,7 +29,7 @@ import dagger.Provides
 class RepositoryModule {
 
     @Provides
-    fun provideAllNewsFromRestApiNetworkOrFromRoom(newsDatabase: NewsDatabase, githubRepositoryApi: GithubRepositoryApi, dbMapper : DbMapper) : NewsRepository {
-        return NewsRepositoryImpl(newsDatabase, githubRepositoryApi, dbMapper)
+    fun provideAllNewsFromRestApiNetworkOrFromRoom(moviesDatabase: MoviesDatabase, movieRepositoryApi: MovieRepositoryApi, dbMapper : DbMapper) : MoviesRepository {
+        return MoviesRepositoryImpl(moviesDatabase, movieRepositoryApi, dbMapper)
     }
 }

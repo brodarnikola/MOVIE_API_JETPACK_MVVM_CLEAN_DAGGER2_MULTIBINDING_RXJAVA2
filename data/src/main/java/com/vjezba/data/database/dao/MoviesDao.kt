@@ -28,57 +28,29 @@
  * THE SOFTWARE.
  */
 
-package com.vjezba.data.database.mapper
+package com.vjezba.data.database.dao
 
-import com.google.gson.annotations.SerializedName
+import androidx.room.*
 import com.vjezba.data.database.model.DBMovies
-import com.vjezba.data.networking.model.ApiMovies
-import com.vjezba.domain.model.Articles
-import com.vjezba.domain.model.MovieResult
-import com.vjezba.domain.model.Movies
-import com.vjezba.domain.model.News
-import kotlin.collections.map
 
-class DbMapperImpl : DbMapper {
+@Dao
+interface MoviesDao {
 
-    override fun mapApiMoviesToDomainMovies(apiMovies: ApiMovies): Movies {
-        return with(apiMovies) {
-            Movies(
-                page,
-                results,
-                totalPages,
-                totalResults
-            )
-        }
-    }
+  @Query("SELECT * FROM movie_table")
+  fun getMovies(): List<DBMovies>
 
-    override fun mapDomainMoviesToDbMovies(moviesList: Movies): List<DBMovies> {
-        return moviesList.result.map {
-            with(it) {
-                DBMovies(
-                    id ?: 0,
-                    idOfMovie = it.id ?: 0L,
-                    backdropPath = it.backdropPath,
-                    originalLanguage = it.originalLanguage,
-                    originalTitle = it.originalTitle,
-                    overview = it.overview,
-                    popularity = it.popularity
-                )
-            }
-        }
-    }
+  @Transaction
+  fun updateMovies(articles: List<DBMovies>) {
+    clearNews()
+    insertAllNews(articles)
+  }
 
-    override fun mapDBMoviesListToMovies(moviesList: DBMovies): MovieResult {
-        return with(moviesList) {
-            MovieResult(
-                id = id,
-                backdropPath = backdropPath,
-                originalLanguage = originalLanguage,
-                originalTitle = originalTitle,
-                overview = overview,
-                popularity = popularity
-            )
-        }
-    }
+  @Query("DELETE FROM movie_table")
+  fun clearNews()
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  fun insertAllNews(articles: List<DBMovies>)
+
+
 
 }

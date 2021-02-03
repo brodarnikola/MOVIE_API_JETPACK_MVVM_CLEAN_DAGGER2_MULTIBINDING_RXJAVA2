@@ -1,44 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parentLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingRight="5dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingRight="5dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/imagePhoto"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:scaleType="center"
+        android:src="@drawable/placeholder"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="3.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/textTitleName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textTitleName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@android:color/background_dark"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="7.0"
+        app:layout_constraintLeft_toRightOf="@+id/imagePhoto"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/imagePhoto"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:scaleType="center"
-            android:src="@drawable/placeholder"
-            android:layout_weight="0.3"  />
+    <TextView
+        android:id="@+id/textDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@android:color/background_dark"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="7.0"
+        app:layout_constraintLeft_toRightOf="@+id/imagePhoto"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTitleName" />
 
-
-        <TextView
-            android:id="@+id/textTitleName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@android:color/background_dark"
-            android:layout_weight="0.7"
-            android:layout_gravity="center" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/textPopularity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@android:color/background_dark"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="7.0"
+        app:layout_constraintLeft_toRightOf="@+id/imagePhoto"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDescription"
+        app:layout_constraintBottom_toBottomOf="@+id/imagePhoto"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorAccent"/>
+        android:background="@color/colorAccent"
+        app:layout_constraintTop_toBottomOf="@+id/imagePhoto"  />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
