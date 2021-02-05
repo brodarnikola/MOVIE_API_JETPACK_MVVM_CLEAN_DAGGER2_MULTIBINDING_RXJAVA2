@@ -68,27 +68,21 @@ class DbMapperImpl : DbMapper {
     }
 
     override fun mapDomainMoviesToDbMovies(moviesList: Movies): List<DBMovies> {
-        if( moviesList != null ) {
+        if (moviesList != null) {
             return moviesList.result.map {
                 with(it) {
-                    //if( DBMovies != null ) {
-                        DBMovies(
-                            id ?: 0,
-                            idOfMovie = it.id ?: 0L,
-                            backdropPath = it.backdropPath ?: "",
-                            originalLanguage = it.originalLanguage,
-                            originalTitle = it.originalTitle,
-                            overview = it.overview,
-                            popularity = it.popularity
-                        )
-//                    }
-//                    else {
-//                        DBMovies(0, 0, "", "", "", "", 0.0)
-//                    }
+                    DBMovies(
+                        id ?: 0,
+                        idOfMovie = it.id ?: 0L,
+                        backdropPath = it.backdropPath ?: "",
+                        originalLanguage = it.originalLanguage,
+                        originalTitle = it.originalTitle,
+                        overview = it.overview,
+                        popularity = it.popularity
+                    )
                 }
             }
-        }
-        else {
+        } else {
             return listOf()
         }
     }
@@ -117,9 +111,9 @@ class DbMapperImpl : DbMapper {
 
     override fun mapApiActorsToDomainActors(apiActors: ApiActors): Actors {
         return with(apiActors) {
-             Actors(
-                 id,
-                 cast
+            Actors(
+                id,
+                cast
             )
         }
     }
