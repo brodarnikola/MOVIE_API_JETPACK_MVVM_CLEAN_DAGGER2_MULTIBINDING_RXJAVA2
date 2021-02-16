@@ -68,10 +68,7 @@ class MoviesViewModel @Inject constructor(
                 //.flatMap { source: News? -> Observable.fromArray(source) or  } // .. iterate through each item
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext { data: Movies? ->
-
-                    _moviesMutableLiveData.value?.let { data ->
-                        _moviesMutableLiveData.value = data
-                    }
+                    _moviesMutableLiveData.value = data
                 }
                 .subscribe()
         }
