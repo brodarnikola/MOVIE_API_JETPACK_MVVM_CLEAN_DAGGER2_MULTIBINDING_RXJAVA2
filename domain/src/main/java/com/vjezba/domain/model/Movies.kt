@@ -7,7 +7,7 @@ data class Movies(
 
     @SerializedName("page")
     val page: Int = 0,
-    val result: List<MovieResult> = listOf(),
+    var result: List<MovieResult> = listOf(),
     @SerializedName("total_pages")
     val totalPages: Int = 0,
     @SerializedName("total_results")

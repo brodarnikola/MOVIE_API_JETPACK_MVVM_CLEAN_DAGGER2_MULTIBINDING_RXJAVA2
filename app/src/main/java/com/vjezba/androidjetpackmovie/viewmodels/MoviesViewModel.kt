@@ -129,6 +129,8 @@ class MoviesViewModel @Inject constructor(
         Observable.fromCallable {
 
             if( movies != null ) {
+                val moviesFinalResult = movies.result.sortedBy { it.id }
+                movies.result = moviesFinalResult
                 dbMovies.moviesDAO().updateMovies(
                     dbMapper?.mapDomainMoviesToDbMovies(movies) ?: listOf()
                 )

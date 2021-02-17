@@ -36,7 +36,7 @@ import com.vjezba.data.database.model.DBMovies
 @Dao
 interface MoviesDao {
 
-  @Query("SELECT * FROM movie_table")
+  @Query("SELECT * FROM movie_table ORDER BY id ASC")
   fun getMovies(): List<DBMovies>
 
   @Transaction

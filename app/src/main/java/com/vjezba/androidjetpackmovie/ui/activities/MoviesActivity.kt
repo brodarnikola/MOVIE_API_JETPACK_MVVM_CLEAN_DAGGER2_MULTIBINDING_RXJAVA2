@@ -15,6 +15,7 @@ import com.vjezba.androidjetpackmovie.di.ViewModelFactory
 import com.vjezba.androidjetpackmovie.di.injectViewModel
 import com.vjezba.androidjetpackmovie.ui.adapters.MoviesAdapter
 import com.vjezba.androidjetpackmovie.viewmodels.MoviesViewModel
+import com.vjezba.data.networking.ConnectivityUtil
 import com.vjezba.domain.model.MovieResult
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -45,6 +46,9 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
     private var isLastPage = false
     private var loading = false
     private var page: Int = 1
+
+    @Inject
+    lateinit var connectivityUtil: ConnectivityUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,8 +99,10 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
         movies_list.addOnScrollListener(object : RecyclerViewPaginationListener(moviesLayoutManager) {
 
             override fun loadMoreItems() {
-                loading = true
-                doRestApiCall()
+                if( connectivityUtil.isConnectedToInternet() ) {
+                    loading = true
+                    doRestApiCall()
+                }
             }
 
             override fun isLastPage(): Boolean {

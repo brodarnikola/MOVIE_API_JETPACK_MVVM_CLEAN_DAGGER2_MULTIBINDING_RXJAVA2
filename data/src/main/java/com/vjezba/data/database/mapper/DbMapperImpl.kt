@@ -36,6 +36,7 @@ import com.vjezba.data.networking.model.ApiMovieDetails
 import com.vjezba.data.networking.model.ApiMovies
 import com.vjezba.data.networking.model.ApiTrailers
 import com.vjezba.domain.model.*
+import okhttp3.internal.checkOffsetAndCount
 
 class DbMapperImpl : DbMapper {
 
@@ -69,10 +70,12 @@ class DbMapperImpl : DbMapper {
 
     override fun mapDomainMoviesToDbMovies(moviesList: Movies): List<DBMovies> {
         if (moviesList != null) {
+            var idCounter = 0L
             return moviesList.result.map {
                 with(it) {
+                    idCounter++
                     DBMovies(
-                        id ?: 0,
+                        idCounter,
                         idOfMovie = it.id ?: 0L,
                         backdropPath = it.backdropPath ?: "",
                         originalLanguage = it.originalLanguage,
