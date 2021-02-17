@@ -41,15 +41,15 @@ interface MoviesDao {
 
   @Transaction
   fun updateMovies(articles: List<DBMovies>) {
-    clearNews()
-    insertAllNews(articles)
+    //clearData()
+    insertAllData(articles)
   }
 
   @Query("DELETE FROM movie_table")
-  fun clearNews()
+  fun clearData()
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertAllNews(articles: List<DBMovies>)
+  fun insertAllData(articles: List<DBMovies>)
 
 
 
