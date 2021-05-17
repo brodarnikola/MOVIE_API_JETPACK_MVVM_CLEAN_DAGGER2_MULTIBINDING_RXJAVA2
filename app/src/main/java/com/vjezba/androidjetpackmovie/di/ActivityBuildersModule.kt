@@ -9,6 +9,9 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ActivityBuildersModule {
 
+    @ContributesAndroidInjector
+    abstract fun contributeMoviesPaginationActivity(): MoviesScrollToBottomActivity
+
     //@ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
     @ContributesAndroidInjector
     abstract fun contributeMoviesActivity(): MoviesActivity

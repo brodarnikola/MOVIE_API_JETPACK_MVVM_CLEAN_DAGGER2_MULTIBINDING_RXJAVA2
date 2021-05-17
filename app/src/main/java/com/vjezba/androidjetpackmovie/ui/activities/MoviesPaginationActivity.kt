@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -15,7 +14,7 @@ import com.vjezba.androidjetpackmovie.customcontrol.RecyclerViewPaginationListen
 import com.vjezba.androidjetpackmovie.di.ViewModelFactory
 import com.vjezba.androidjetpackmovie.di.injectViewModel
 import com.vjezba.androidjetpackmovie.ui.adapters.MoviesAdapter
-import com.vjezba.androidjetpackmovie.viewmodels.MoviesViewModel
+import com.vjezba.androidjetpackmovie.viewmodels.MoviesPaginationViewModel
 import com.vjezba.data.networking.ConnectivityUtil
 import com.vjezba.domain.model.MovieResult
 import dagger.android.DispatchingAndroidInjector
@@ -34,7 +33,7 @@ class MoviesScrollToBottomActivity : BaseActivity(R.id.no_internet_layout), HasA
     override fun activityInjector() = dispatchingAndroidActivityInjector
 
     @Inject lateinit var viewModelFactory: ViewModelFactory
-    lateinit var moviesViewModel: MoviesViewModel
+    lateinit var moviesViewModel: MoviesPaginationViewModel
 
     private lateinit var moviesAdapter: MoviesAdapter
     val moviesLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -48,7 +47,7 @@ class MoviesScrollToBottomActivity : BaseActivity(R.id.no_internet_layout), HasA
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_scroll_to_bottom)
+        setContentView(R.layout.activity_movies_pagination)
 
         moviesViewModel = injectViewModel(viewModelFactory)
     }

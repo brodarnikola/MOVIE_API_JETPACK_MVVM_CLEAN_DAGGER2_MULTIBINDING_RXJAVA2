@@ -11,6 +11,13 @@ import dagger.multibindings.IntoMap
 @Module
 abstract class ViewModelModule {
 
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MoviesPaginationViewModel::class)
+    abstract fun bindMoviesPaginationActivityiViewModel(viewModel: MoviesPaginationViewModel): ViewModel
+
+
     @Binds
     @IntoMap
     @ViewModelKey(MoviesViewModel::class)
