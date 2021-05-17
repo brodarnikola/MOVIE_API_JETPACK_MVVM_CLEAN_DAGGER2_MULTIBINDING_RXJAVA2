@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Github">
         <activity
-            android:name="com.vjezba.androidjetpackmovie.ui.activities.MoviesActivity" >
+            android:name="com.vjezba.androidjetpackmovie.ui.activities.MoviesScrollToBottomActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,6 +28,8 @@
             android:name="com.vjezba.androidjetpackmovie.ui.activities.TrailersActivity" />
         <activity
             android:name="com.vjezba.androidjetpackmovie.ui.activities.ActorsActivity" />
+        <activity
+            android:name="com.vjezba.androidjetpackmovie.ui.activities.MoviesActivity" />
     </application>
 
 </manifest>

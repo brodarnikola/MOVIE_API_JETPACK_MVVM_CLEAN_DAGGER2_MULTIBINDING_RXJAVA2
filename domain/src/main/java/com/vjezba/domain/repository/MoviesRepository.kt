@@ -27,11 +27,11 @@ import io.reactivex.Single
 
 interface MoviesRepository {
 
-    fun getMovies(page: Int) : Single<Movies>
+    fun getMovies(page: Int) : Flowable<Movies>
 
-    fun getMoviesDetails(movieId: Long) : Flowable<MovieDetails>
+    fun getMoviesDetails(movieId: Long) : Single<MovieDetails>
 
     fun getTrailers(movieId: Long) : Flowable<Trailer>
 
-    fun getActors(movieId: Long) : Flowable<Actors>
+    fun getActors(movieId: Long) : Single<Actors>
 }

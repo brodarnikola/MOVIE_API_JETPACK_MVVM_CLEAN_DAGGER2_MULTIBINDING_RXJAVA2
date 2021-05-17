@@ -127,6 +127,22 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvReleaseDate" />
 
+    <Button
+        android:id="@+id/btnScroolToBottom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Pagination Example"
+        android:textColor="@android:color/black"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="5.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/btnActors"
+        app:layout_constraintTop_toBottomOf="@+id/btnTrailers" />
+
 
     <FrameLayout
         android:id="@+id/no_internet_layout"

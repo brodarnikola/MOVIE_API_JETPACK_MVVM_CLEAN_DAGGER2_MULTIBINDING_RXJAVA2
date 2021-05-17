@@ -39,7 +39,7 @@ class MoviesRepositoryImpl constructor(
 ) : MoviesRepository {
 
     // example, practice of rxjava2
-    override fun getMovies(page: Int): Single<Movies> {
+    override fun getMovies(page: Int): Flowable<Movies> {
         val moviesResult = service.searchMovies(page)
 
         Log.i("Da li ce uci", "AAAA Hoce li svakih 10 sekundi skinuti nove podatke")
@@ -50,7 +50,7 @@ class MoviesRepositoryImpl constructor(
         return correctMoviesResult
     }
 
-    override fun getMoviesDetails( movieId: Long ): Flowable<MovieDetails> {
+    override fun getMoviesDetails( movieId: Long ): Single<MovieDetails> {
 
         val moviesResult = service.getDetailsMovie(movieId)
 
@@ -68,7 +68,7 @@ class MoviesRepositoryImpl constructor(
         return correctMoviesResult
     }
 
-    override fun getActors(movieId: Long): Flowable<Actors> {
+    override fun getActors(movieId: Long): Single<Actors> {
 
         val moviesResult = service.getActors(movieId)
 

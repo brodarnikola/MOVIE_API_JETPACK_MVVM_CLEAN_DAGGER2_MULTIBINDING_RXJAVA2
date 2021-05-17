@@ -34,11 +34,11 @@ interface MovieRepositoryApi {
 
     @GET("discover/movie?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page")
     @Headers("Content-Type: application/json")
-    fun searchMovies( @Query("page") page: Int ): Single<ApiMovies>
+    fun searchMovies( @Query("page") page: Int ): Flowable<ApiMovies>
 
     @GET("movie/{movieId}?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US")
     @Headers("Content-Type: application/json")
-    fun getDetailsMovie( @Path("movieId") movieId: Long ): Flowable<ApiMovieDetails>
+    fun getDetailsMovie( @Path("movieId") movieId: Long ): Single<ApiMovieDetails>
 
     @GET("movie/{movieId}/videos?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US")
     @Headers("Content-Type: application/json")
@@ -47,6 +47,6 @@ interface MovieRepositoryApi {
 
     @GET("movie/{movieId}/credits?api_key=fea6a69ff7391818240b67fa3bb83786&language=en-US")
     @Headers("Content-Type: application/json")
-    fun getActors( @Path("movieId") movieId: Long ): Flowable<ApiActors>
+    fun getActors( @Path("movieId") movieId: Long ): Single<ApiActors>
 
 }

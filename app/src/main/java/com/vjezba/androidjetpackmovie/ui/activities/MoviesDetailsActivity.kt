@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_movie_details.*
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
-class MoviesDetailsActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjector, HasSupportFragmentInjector {
+class MoviesDetailsActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjector {
 
     var movieId = 0L
 
@@ -30,11 +30,6 @@ class MoviesDetailsActivity : BaseActivity(R.id.no_internet_layout), HasActivity
     lateinit var dispatchingAndroidActivityInjector: DispatchingAndroidInjector<Activity>
 
     override fun activityInjector() = dispatchingAndroidActivityInjector
-
-    @Inject
-    lateinit var dispatchingAndroidFragmentInjector:  DispatchingAndroidInjector<androidx.fragment.app.Fragment>
-
-    override fun supportFragmentInjector() = dispatchingAndroidFragmentInjector
 
     @Inject lateinit var viewModelFactory: ViewModelFactory
     lateinit var movieDetailsViewModel: MovieDetailsViewModel
@@ -90,6 +85,15 @@ class MoviesDetailsActivity : BaseActivity(R.id.no_internet_layout), HasActivity
         btnActors.setOnClickListener {
             startActorsActivity()
         }
+
+        btnScroolToBottom.setOnClickListener {
+            startPaginationExampleActivity()
+        }
+    }
+
+    private fun startPaginationExampleActivity() {
+        val intent = Intent(this, MoviesActivity::class.java)
+        startActivity(intent)
     }
 
     private fun startActorsActivity() {

@@ -35,6 +35,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.net.SecureCacheResponse
 import javax.inject.Inject
 
 
@@ -54,28 +55,22 @@ class ActorsViewModel @Inject constructor(
         moviesRepository.getActors(movieId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .toObservable()
-            .subscribe(object : Observer<Actors> {
-                override fun onSubscribe(d: Disposable) {
-                    compositeDisposable.add(d)
-                }
+            .onErrorReturn { error ->
+                Log.e("onErrorReceived", "OnError return is: ${error}")
+                Actors()
+            }
+            .subscribe(
+                this::handleResponse, this::onError
+            )
+    }
 
-                override fun onNext(response: Actors) {
+    private fun onError(error: Throwable) {
+        Log.e("Error", "Error is: ${error}")
+    }
 
-                    _actorsMutableLiveData.value?.let {
-                        _actorsMutableLiveData.value = response
-                    }
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.d(
-                        ContentValues.TAG,
-                        "onError received: " + e.message
-                    )
-                }
-
-                override fun onComplete() {}
-            })
+    private fun handleResponse(response: Actors) {
+        // TODO: Save this data ( Actors ) into database
+        _actorsMutableLiveData.value?.let {_actorsMutableLiveData.value = response }
     }
 
     override fun onCleared() {

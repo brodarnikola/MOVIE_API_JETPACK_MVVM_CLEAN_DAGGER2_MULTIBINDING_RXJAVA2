@@ -21,6 +21,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.vjezba.domain.model.Actors
 import com.vjezba.domain.model.MovieDetails
 import com.vjezba.domain.repository.MoviesRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -48,31 +49,21 @@ class MovieDetailsViewModel @Inject constructor(
         movieRepository.getMoviesDetails(movieId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .toObservable()
-            .subscribe(object : io.reactivex.Observer<MovieDetails> {
-                override fun onSubscribe(d: Disposable) {
-                    compositeDisposable.add(d)
-                }
+            .onErrorReturn { error ->
+                Log.e("onErrorReceived", "OnError return is: ${error}")
+                MovieDetails()
+            }
+            .subscribe(
+                this::handleResponse, this::onError
+            )
+    }
 
-                override fun onNext(response: MovieDetails) {
-                    Log.d(ContentValues.TAG, "Da li ce uci sim EEEE: ${response}")
+    private fun onError(error: Throwable) {
+        Log.e("Error", "Error is: ${error}")
+    }
 
-                    _newsDetailsMutableLiveData.value?.let { news ->
-                        _newsDetailsMutableLiveData.value = response
-
-                        Log.d(ContentValues.TAG, "Da li ce uci sim FFFFFF: ${_newsDetailsMutableLiveData.value!!}")
-                    }
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.d(
-                        ContentValues.TAG,
-                        "onError received: " + e.message
-                    )
-                }
-
-                override fun onComplete() {}
-            })
+    private fun handleResponse(response: MovieDetails) {
+        _newsDetailsMutableLiveData.value?.let {_newsDetailsMutableLiveData.value = response }
     }
 
     override fun onCleared() {

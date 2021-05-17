@@ -65,7 +65,7 @@ class ActorsActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
 
         initializeUi()
 
-        actorsViewModel.actorsList.observe(this@ActorsActivity, Observer { news ->
+        actorsViewModel.actorsList.observe(this, { news ->
             Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu uu ACTORS: ${news.cast.joinToString { "-" }}")
             progressBar.visibility = View.GONE
             actorsAdapter.update(news.cast.toMutableList())

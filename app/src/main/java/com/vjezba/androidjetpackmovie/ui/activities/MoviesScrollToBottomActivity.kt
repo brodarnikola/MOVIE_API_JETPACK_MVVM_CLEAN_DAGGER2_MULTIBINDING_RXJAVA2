@@ -24,9 +24,9 @@ import kotlinx.android.synthetic.main.activity_movie.*
 import javax.inject.Inject
 
 
-const val pageSize: Int = 20
+const val pageSizeMoviesScrollToBottomActivity: Int = 20
 
-class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjector {
+class MoviesScrollToBottomActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjector {
 
     @Inject
     lateinit var dispatchingAndroidActivityInjector: DispatchingAndroidInjector<Activity>
@@ -48,7 +48,7 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie)
+        setContentView(R.layout.activity_movie_scroll_to_bottom)
 
         moviesViewModel = injectViewModel(viewModelFactory)
     }
@@ -65,7 +65,7 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
 
         initializeUi()
 
-        moviesViewModel.moviesList.observe(this@MoviesActivity, Observer { news ->
+        moviesViewModel.moviesList.observe(this, { news ->
             Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu: ${news.result.joinToString { "-" }}")
             progressBar.visibility = View.GONE
             if (page > 1)
@@ -87,6 +87,7 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
                         )
                         snackbar1.show()
                     }
+
                 snackbar.show()
             }
         })
@@ -109,34 +110,34 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
         /**
          * add scroll listener while user reach in bottom load more will call
          */
-//        movies_list.addOnScrollListener(object :
-//            RecyclerViewPaginationListener(moviesLayoutManager) {
-//
-//            override fun loadMoreItems() {
-//                Log.d("ScrollToBottom", "Will it enter here")
-//                if (connectivityUtil.isConnectedToInternet()) {
-//                    loading = true
-//                    doRestApiCall()
-//                }
-//            }
-//
-//            override fun isLastPage(): Boolean {
-//                return isLastPage
-//            }
-//
-//            override fun isLoading(): Boolean {
-//                return loading
-//            }
-//        })
+        movies_list.addOnScrollListener(object :
+            RecyclerViewPaginationListener(moviesLayoutManager) {
+
+            override fun loadMoreItems() {
+                Log.d("ScrollToBottom", "Will it enter here")
+                if (connectivityUtil.isConnectedToInternet()) {
+                    loading = true
+                    doRestApiCall()
+                }
+            }
+
+            override fun isLastPage(): Boolean {
+                return isLastPage
+            }
+
+            override fun isLoading(): Boolean {
+                return loading
+            }
+        })
     }
 
-//    private fun doRestApiCall() {
-//        moviesAdapter.addLoading()
-//        page++
-//        moviesViewModel.getMoviesFromServer(page)
-//
-//        Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu pageNumber is: ${page}")
-//    }
+    private fun doRestApiCall() {
+        moviesAdapter.addLoading()
+        page++
+        moviesViewModel.getMoviesFromServer(page)
+
+        Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu pageNumber is: ${page}")
+    }
 
     private fun setMoviesClickListener(movieId: Long) {
         val intent = Intent(this, MoviesDetailsActivity::class.java)
