@@ -82,31 +82,49 @@ class MoviesViewModel @Inject constructor(
         moviesRepository.getMovies(page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .toObservable()
-            .subscribe(object : Observer<Movies> {
-                override fun onSubscribe(d: Disposable) {
-                    compositeDisposable.add(d)
-                }
+            //.toObservable()
+            .onErrorReturn { error ->
+                Log.e(ContentValues.TAG, "onError received: ${error}")
+                Movies()
+                //RepositoryResponse(0, false, listOf())
+            }
+            .subscribe(
+                this::handleResponse, this::onError
+            //this::handleResponse, this::onError
+            )
+//            .subscribe(object : Observer<Movies> {
+//                override fun onSubscribe(d: Disposable) {
+//                    compositeDisposable.add(d)
+//                }
+//
+//                override fun onNext(response: Movies) {
+//
+//                    insertMoviesIntoDB(response)
+//
+//                    _moviesMutableLiveData.value?.let { _moviesMutableLiveData.value = response
+//                    }
+//                }
+//
+//                override fun onError(e: Throwable) {
+//                    Log.d(
+//                        ContentValues.TAG,
+//                        "onError received: " + e.message
+//                    )
+//                }
+//
+//                override fun onComplete() {
+//
+//                }
+//            })
+    }
 
-                override fun onNext(response: Movies) {
+    private fun onError(error: Throwable) {
+        Log.e("Error", "Error is: ${error}")
+    }
 
-                    insertMoviesIntoDB(response)
-
-                    _moviesMutableLiveData.value?.let { _moviesMutableLiveData.value = response
-                    }
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.d(
-                        ContentValues.TAG,
-                        "onError received: " + e.message
-                    )
-                }
-
-                override fun onComplete() {
-
-                }
-            })
+    private fun handleResponse(response: Movies) {
+        insertMoviesIntoDB(response)
+        _moviesMutableLiveData.value?.let { _moviesMutableLiveData.value = response }
     }
 
     override fun onCleared() {

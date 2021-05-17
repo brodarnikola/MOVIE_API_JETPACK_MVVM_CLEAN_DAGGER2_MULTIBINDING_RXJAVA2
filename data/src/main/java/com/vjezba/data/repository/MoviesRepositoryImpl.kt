@@ -26,6 +26,8 @@ import com.vjezba.domain.model.Movies
 import com.vjezba.domain.model.Trailer
 import com.vjezba.domain.repository.MoviesRepository
 import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
 
 /**
  * RepositoryResponseApi module for handling data operations.
@@ -37,7 +39,7 @@ class MoviesRepositoryImpl constructor(
 ) : MoviesRepository {
 
     // example, practice of rxjava2
-    override fun getMovies(page: Int): Flowable<Movies> {
+    override fun getMovies(page: Int): Single<Movies> {
         val moviesResult = service.searchMovies(page)
 
         Log.i("Da li ce uci", "AAAA Hoce li svakih 10 sekundi skinuti nove podatke")

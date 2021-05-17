@@ -21,11 +21,13 @@ import com.vjezba.domain.model.MovieDetails
 import com.vjezba.domain.model.Movies
 import com.vjezba.domain.model.Trailer
 import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
 
 
 interface MoviesRepository {
 
-    fun getMovies(page: Int) : Flowable<Movies>
+    fun getMovies(page: Int) : Single<Movies>
 
     fun getMoviesDetails(movieId: Long) : Flowable<MovieDetails>
 
