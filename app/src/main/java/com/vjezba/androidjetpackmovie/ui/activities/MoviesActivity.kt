@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +21,10 @@ import com.vjezba.data.networking.ConnectivityUtil
 import com.vjezba.domain.model.MovieResult
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import kotlinx.android.synthetic.main.activity_actors.*
 import kotlinx.android.synthetic.main.activity_movie.*
+import kotlinx.android.synthetic.main.activity_movie.progressBar
+import kotlinx.android.synthetic.main.activity_movie.toolbar
 import javax.inject.Inject
 
 
@@ -39,7 +43,6 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
     private lateinit var moviesAdapter: MoviesAdapter
     val moviesLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
-    private var isLastPage = false
     private var loading = false
     private var page: Int = 1
 
@@ -51,6 +54,12 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
         setContentView(R.layout.activity_movie)
 
         moviesViewModel = injectViewModel(viewModelFactory)
+
+
+        this.setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     override fun onNetworkStateUpdated(available: Boolean) {
@@ -104,45 +113,21 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
             adapter = moviesAdapter
         }
         movies_list.adapter = moviesAdapter
-
-
-        /**
-         * add scroll listener while user reach in bottom load more will call
-         */
-//        movies_list.addOnScrollListener(object :
-//            RecyclerViewPaginationListener(moviesLayoutManager) {
-//
-//            override fun loadMoreItems() {
-//                Log.d("ScrollToBottom", "Will it enter here")
-//                if (connectivityUtil.isConnectedToInternet()) {
-//                    loading = true
-//                    doRestApiCall()
-//                }
-//            }
-//
-//            override fun isLastPage(): Boolean {
-//                return isLastPage
-//            }
-//
-//            override fun isLoading(): Boolean {
-//                return loading
-//            }
-//        })
     }
-
-//    private fun doRestApiCall() {
-//        moviesAdapter.addLoading()
-//        page++
-//        moviesViewModel.getMoviesFromServer(page)
-//
-//        Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu pageNumber is: ${page}")
-//    }
 
     private fun setMoviesClickListener(movieId: Long) {
-        val intent = Intent(this, MoviesDetailsActivity::class.java)
-        intent.putExtra("movieId", movieId)
-        startActivity(intent)
-        finish()
+
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
 
 }

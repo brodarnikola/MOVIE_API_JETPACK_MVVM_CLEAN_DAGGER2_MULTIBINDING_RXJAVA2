@@ -140,7 +140,7 @@ class MoviesDetailsActivity : BaseActivity(R.id.no_internet_layout), HasActivity
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                val intent = Intent( this, MoviesActivity::class.java )
+                val intent = Intent( this, MoviesPaginationActivity::class.java )
                 startActivity(intent)
                 finish()
                 true
@@ -155,7 +155,7 @@ class MoviesDetailsActivity : BaseActivity(R.id.no_internet_layout), HasActivity
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent( this, MoviesActivity::class.java )
+        val intent = Intent( this, MoviesPaginationActivity::class.java )
         startActivity(intent)
         finish()
     }

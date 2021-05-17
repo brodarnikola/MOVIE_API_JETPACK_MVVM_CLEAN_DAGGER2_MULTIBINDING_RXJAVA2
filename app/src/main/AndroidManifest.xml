@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Github">
         <activity
-            android:name="com.vjezba.androidjetpackmovie.ui.activities.MoviesScrollToBottomActivity" >
+            android:name="com.vjezba.androidjetpackmovie.ui.activities.MoviesPaginationActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

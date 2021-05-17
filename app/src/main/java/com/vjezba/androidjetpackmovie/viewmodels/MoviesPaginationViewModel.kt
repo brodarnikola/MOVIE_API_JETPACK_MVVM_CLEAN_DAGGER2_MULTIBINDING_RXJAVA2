@@ -16,6 +16,7 @@
 
 package com.vjezba.androidjetpackmovie.viewmodels
 
+import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,8 +27,8 @@ import com.vjezba.data.networking.ConnectivityUtil
 import com.vjezba.domain.model.MovieResult
 import com.vjezba.domain.model.Movies
 import com.vjezba.domain.repository.MoviesRepository
-import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -46,20 +47,10 @@ class MoviesPaginationViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
 
     private val _moviesMutableLiveData = MutableLiveData<Movies>().apply {
-        value = Movies(0, listOf(), 0, 0L)
+        value = Movies( 0, listOf(), 0, 0L )
     }
 
     val moviesList: LiveData<Movies> = _moviesMutableLiveData
-
-    private val _page = MutableLiveData<Int>().apply {
-        value = 1
-    }
-
-    val page: LiveData<Int> = _page
-
-    var pageCounter = 1
-
-    private lateinit var disposable: Disposable
 
     fun getMoviesFromServer(page: Int) {
         if (connectivityUtil.isConnectedToInternet()) {
@@ -70,7 +61,7 @@ class MoviesPaginationViewModel @Inject constructor(
             Observable.fromCallable {
                 val listDBMovies = getMoviesFromDb()
 
-                Movies(0, listDBMovies, 0, 0L)
+                Movies(0 , listDBMovies,0,0L)
             }
                 .subscribeOn(Schedulers.io())
                 //.flatMap { source: List<Articles> -> Observable.fromIterable(source) } // this flatMap is good if you want to iterate, go through list of objects.
@@ -87,101 +78,36 @@ class MoviesPaginationViewModel @Inject constructor(
         }
     }
 
-    private fun callMoviesRestApi(aLong: Long) {
-
-        val observable: Flowable<Movies> =  moviesRepository.getMovies(pageCounter)
-        observable
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            //.map(Function<Movies, Movies> { result: Movies -> result })
-            .subscribe(this::handleResults, this::handleError)
-
-//        val test5 = moviesRepository.getMovies(1)
-//            .timeInterval(TimeUnit.SECONDS, Schedulers.io())
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .toObservable()
-//            .onErrorReturn { error ->
-//                Log.e(ContentValues.TAG, "onError received: ${error}")
-//                Movies()
-//            }
-////            .subscribe(
-////                this::handleResponse, this::onError
-////            )
-//            .subscribe(object : Observer<Movies> {
-//                override fun onSubscribe(d: Disposable) {
-//                    compositeDisposable.add(d)
-//                }
-//
-//                override fun onNext(response: Movies) {
-//
-//                    insertMoviesIntoDB(response)
-//
-//                    _moviesMutableLiveData.value?.let {
-//                        _moviesMutableLiveData.value = response
-//                    }
-//                }
-//
-//                override fun onError(e: Throwable) {
-//                    Log.d(
-//                        ContentValues.TAG,
-//                        "onError received: " + e.message
-//                    )
-//                }
-//
-//                override fun onComplete() {
-//
-//                }
-//            })
-    }
-
-    private fun handleError(error: Throwable) {
-        Log.e("Error", "Error is: ${error}")
-    }
-
-    private fun handleResults(response: Movies) {
-
-        insertMoviesIntoDB(response)
-        _moviesMutableLiveData.value?.let { _moviesMutableLiveData.value = response }
-
-        Log.d("NewDataReceived", "Will it go here? will new data be arrived? .. COunter is: ${_page.value}, movies response size is: ${response.result.size}")
-
-        if( pageCounter != 1 ) {
-            _page.value = _page.value?.plus(1)
-        }
-        pageCounter++
-    }
-
     private fun getMoviesFromNetwork(page: Int) {
-        // TODO: If I would like to fetch data every 20 seconds, then I will need Observale or Flowable
-        // If I want just one time to fetch data then is good also this single
-
-//        Observable.interval(5000L, TimeUnit.SECONDS, Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-
-        pageCounter = page
-
-        disposable = Observable.interval(
-            1000, 10000,
-            TimeUnit.MILLISECONDS
-        )
+        moviesRepository.getMovies(page)
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::callMoviesRestApi, this::onError)
+            .toObservable()
+            .subscribe(object : Observer<Movies> {
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
 
+                override fun onNext(response: Movies) {
+
+                    insertMoviesIntoDB(response)
+
+                    _moviesMutableLiveData.value?.let { _moviesMutableLiveData.value = response
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.d(
+                        ContentValues.TAG,
+                        "onError received: " + e.message
+                    )
+                }
+
+                override fun onComplete() {
+
+                }
+            })
     }
-
-    private fun onError(error: Throwable) {
-        Log.e("Error", "Error is: ${error}")
-    }
-
-//    private fun onError(error: Throwable) {
-//        Log.e("Error", "Error is: ${error}")
-//    }
-//
-//    private fun handleResponse(response: Movies) {
-//        insertMoviesIntoDB(response)
-//        _moviesMutableLiveData.value?.let { _moviesMutableLiveData.value = response }
-//    }
 
     override fun onCleared() {
         super.onCleared()
@@ -218,10 +144,7 @@ class MoviesPaginationViewModel @Inject constructor(
             .doOnError { Log.e("Error in observables", "Error is: ${it.message}, ${throw it}") }
             .subscribeOn(Schedulers.io())
             .subscribe {
-                Log.d(
-                    "Hoce spremiti vijesti",
-                    "Inserted ${movies.result.size} movies from API in DB..."
-                )
+                Log.d( "Hoce spremiti vijesti","Inserted ${  movies.result.size} movies from API in DB...")
             }
     }
 
