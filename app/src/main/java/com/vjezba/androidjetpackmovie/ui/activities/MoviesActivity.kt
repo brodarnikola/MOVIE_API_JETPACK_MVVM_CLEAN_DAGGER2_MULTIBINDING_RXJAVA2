@@ -88,10 +88,10 @@ class MoviesActivity : BaseActivity(R.id.no_internet_layout), HasActivityInjecto
             if( page != 1 ) {
                 val snackbar = Snackbar
                     .make(rootView, "New movies has been downloaded", Snackbar.LENGTH_LONG)
-                    .setAction("UNDO") {
+                    .setAction("AWESOME") {
                         val snackbar1 = Snackbar.make(
                             rootView,
-                            "Message is restored!",
+                            "You can scroll down, to see new movies",
                             Snackbar.LENGTH_SHORT
                         )
                         snackbar1.show()
