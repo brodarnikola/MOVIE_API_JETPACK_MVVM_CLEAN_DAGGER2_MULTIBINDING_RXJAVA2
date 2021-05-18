@@ -92,7 +92,7 @@ class MoviesViewModel @Inject constructor(
     }
 
     private fun handleError(error: Throwable) {
-        Log.e("Error", "Error is: ${error}")
+        Log.e("Error", "On receiving data.. Error is: ${error}")
     }
 
     private fun handleResults(response: Movies) {
@@ -122,7 +122,7 @@ class MoviesViewModel @Inject constructor(
     }
 
     private fun onError(error: Throwable) {
-        Log.e("Error", "Error is: ${error}")
+        Log.e("Error", "On starting creating observable every 10 seconds.. Error is: ${error}")
     }
 
     override fun onCleared() {
