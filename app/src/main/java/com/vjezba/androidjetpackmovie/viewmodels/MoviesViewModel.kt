@@ -86,7 +86,7 @@ class MoviesViewModel @Inject constructor(
 
         val observable: Flowable<Movies> =  moviesRepository.getMovies(pageCounter)
         observable
-            .subscribeOn(Schedulers.newThread())
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::handleResults, this::handleError)
     }
